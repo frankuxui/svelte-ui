@@ -10,7 +10,8 @@ published: true
 ---
 
 <script>
-	import DialogDemo from "content/expo/dialogDemo.svelte";
+	import DialogBasic from "components/examples/dialog-basic.svelte";
+	import DialogPlacement from "components/examples/dialog-placement.svelte";
 </script>
 
 ## Markdown
@@ -41,7 +42,7 @@ const mdsvexOptions = {
 
 Ejemplo de un dialogo básico que muestra un mensaje y un botón para cerrarlo.
 
-<DialogDemo />
+<DialogBasic />
 
 ## Placement
 
@@ -51,4 +52,4 @@ Las opciones disponibles son: `top`, `top-start`, `top-end`, `bottom`, `bottom-s
 
 Por defecto, el dialogo se coloca en el centro de la pantalla.
 
-<DialogDemo placement="top-start" />
+<DialogPlacement placement="top-start" />

@@ -2,6 +2,7 @@
 	import { fade, scale } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
 	import { tick, onMount } from "svelte";
+	import Portal from "./ui/portal.svelte";
 
 	type Placement =
 		| "top-start"
@@ -97,116 +98,92 @@
 </script>
 
 {#if open}
-	<div
-		class={cx(
-			"fixed inset-0 z-50 flex",
-			placement === "top-start" && "items-start justify-start",
-			placement === "top" && "items-start justify-center",
-			placement === "top-end" && "items-start justify-end",
-			placement === "center" && "items-center justify-center",
-			placement === "center-start" && "items-center justify-start",
-			placement === "center-end" && "items-center justify-end",
-			placement === "bottom-start" && "items-end justify-start",
-			placement === "bottom" && "items-end justify-center",
-			placement === "bottom-end" && "items-end justify-end",
-			size === "full-screen" ? "p-0" : "p-10"
-		)}
-		role="dialog"
-		aria-modal="true"
-	>
-		<!-- Backdrop -->
+	<Portal>
 		<div
-			role="button"
-			tabindex="0"
-			class="absolute inset-0 z-10 bg-black/30"
-			aria-label="Close dialog"
-			onclick={() => handleBackdropClick()}
-			onkeyup={(e) => {
-				if (e.key === "Enter" || e.key === " ") {
-					handleBackdropClick();
-				}
-			}}
-			onkeydown={(e) => {
-				if (e.key === "Escape") {
-					e.preventDefault(); // Evitar el comportamiento por defecto del escape
-				}
-			}}
-			transition:fade={{ duration: 200 }}
-		></div>
-
-		<!-- Dialog -->
-		<div
+			transition:fade={{ duration: 300, easing: cubicOut }}
 			class={cx(
-				"relative z-20 flex w-full flex-col bg-white",
-				size === "xs" && "max-w-xs",
-				size === "sm" && "max-w-sm",
-				size === "md" && "max-w-md",
-				size === "lg" && "max-w-lg",
-				size === "xl" && "max-w-xl",
-				size === "2xl" && "max-w-2xl",
-				size === "3xl" && "max-w-3xl",
-				size === "4xl" && "max-w-4xl",
-				size === "5xl" && "max-w-5xl",
-				size === "6xl" && "max-w-6xl",
-				size === "7xl" && "max-w-7xl",
-				size === "8xl" && "max-w-8xl",
-				size === "9xl" && "max-w-9xl",
-				size === "full" && "h-full w-full",
-				size === "full-screen" ? "h-screen w-screen rounded-none" : "rounded-xl p-10",
-				shaking && "shake"
+				"fixed inset-0 z-50 flex",
+				placement === "top-start" && "items-start justify-start",
+				placement === "top" && "items-start justify-center",
+				placement === "top-end" && "items-start justify-end",
+				placement === "center" && "items-center justify-center",
+				placement === "center-start" && "items-center justify-start",
+				placement === "center-end" && "items-center justify-end",
+				placement === "bottom-start" && "items-end justify-start",
+				placement === "bottom" && "items-end justify-center",
+				placement === "bottom-end" && "items-end justify-end",
+				size === "full-screen" ? "p-0" : "p-10"
 			)}
-			transition:scale={{ duration: 300, start: 0.95, opacity: 0, easing: cubicOut }}
+			role="dialog"
+			aria-modal="true"
 		>
-			{#if children}
-				{@render children()}
-			{/if}
+			<!-- Backdrop -->
+			<div
+				role="button"
+				tabindex="0"
+				class="bg-foreground/30 absolute inset-0 z-10"
+				aria-label="Close dialog"
+				onclick={() => handleBackdropClick()}
+				onkeyup={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleBackdropClick();
+					}
+				}}
+				onkeydown={(e) => {
+					if (e.key === "Escape") {
+						e.preventDefault(); // Evitar el comportamiento por defecto del escape
+					}
+				}}
+				transition:fade={{ duration: 200, easing: cubicOut }}
+			></div>
 
-			<header>
-				<button
-					type="button"
-					onclick={() => close()}
-					class="focus:ring-foreground hover:bg-foreground/4 absolute top-4 right-4 rounded-full p-2 transition-all duration-300 focus:ring-2 focus:outline-none"
-					aria-label="Close dialog"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-						><path
-							fill="none"
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M18 6L6 18M6 6l12 12"
-						/></svg
+			<!-- Dialog -->
+			<div
+				class={cx(
+					"bg-background relative z-20 flex w-full flex-col ",
+					size === "xs" && "max-w-xs",
+					size === "sm" && "max-w-sm",
+					size === "md" && "max-w-md",
+					size === "lg" && "max-w-lg",
+					size === "xl" && "max-w-xl",
+					size === "2xl" && "max-w-2xl",
+					size === "3xl" && "max-w-3xl",
+					size === "4xl" && "max-w-4xl",
+					size === "5xl" && "max-w-5xl",
+					size === "6xl" && "max-w-6xl",
+					size === "7xl" && "max-w-7xl",
+					size === "8xl" && "max-w-8xl",
+					size === "9xl" && "max-w-9xl",
+					size === "full" && "h-full w-full",
+					size === "full-screen" ? "h-screen w-screen rounded-none" : "rounded-xl p-10",
+					shaking && "animate-shake-scale"
+				)}
+				transition:scale={{ duration: 300, start: 0.95, opacity: 0, easing: cubicOut }}
+			>
+				{#if children}
+					{@render children()}
+				{/if}
+
+				<header>
+					<button
+						type="button"
+						onclick={() => close()}
+						class="focus:ring-foreground hover:bg-foreground/4 absolute top-4 right-4 rounded-full p-2 transition-all duration-300 focus:ring-2 focus:outline-none"
+						aria-label="Close dialog"
 					>
-				</button>
-			</header>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+							><path
+								fill="none"
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M18 6L6 18M6 6l12 12"
+							/></svg
+						>
+					</button>
+				</header>
+			</div>
 		</div>
-	</div>
+	</Portal>
 {/if}
-
-<style>
-	@keyframes shake-scale {
-		0% {
-			transform: scale(1);
-		}
-		20% {
-			transform: scale(1.05);
-		}
-		40% {
-			transform: scale(0.95);
-		}
-		60% {
-			transform: scale(1.03);
-		}
-		80% {
-			transform: scale(0.97);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
-
-	.shake {
-		animation: shake-scale 0.3s ease;
-	}
-</style>

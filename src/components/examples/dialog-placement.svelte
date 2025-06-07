@@ -31,10 +31,10 @@
 </script>
 
 <Expo>
-	<Dialog {open} setOpen={() => setOpen(false)} staticBackdrop={false} {placement} size="sm">
-		<div>
+	<Dialog {open} setOpen={() => setOpen(false)} {placement}>
+		<header>
 			<h2>Esto es el header</h2>
-		</div>
+		</header>
 
 		<div>
 			<p>Esto es el contenido del dialogo</p>
@@ -67,11 +67,4 @@
 			</button>
 		{/each}
 	</div>
-
-	<button
-		onclick={() => setOpen(true)}
-		class="inline-flex h-10 items-center justify-center rounded bg-blue-700 px-6 text-sm font-medium text-white"
-	>
-		Open dialog
-	</button>
 </Expo>

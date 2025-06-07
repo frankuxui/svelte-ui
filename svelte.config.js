@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
 	extensions: ['.md'],
@@ -18,11 +19,11 @@ const mdsvexOptions = {
 	highlight: {
 		highlighter: async (code, lang = 'text') => {
 			const highlighter = await createHighlighter({
-				themes: ['one-light'],
+				themes: ['vitesse-dark'],
 				langs: ['javascript', 'typescript'],
 			});
 			await highlighter.loadLanguage('javascript', 'typescript');
-			const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme: 'one-light' }));
+			const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme: 'vitesse-dark' }));
 			return `{@html \`${html}\` }`;
 		}
 	},

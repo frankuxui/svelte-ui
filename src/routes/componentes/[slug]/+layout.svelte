@@ -10,8 +10,8 @@
 
 <main class="mt-10 w-full">
 	<div class="max-w-9xl mx-auto w-full px-10">
-		<div class="flex items-start justify-between gap-10">
-			<aside class="sticky top-30 flex w-full max-w-3xs flex-col items-start gap-3">
+		<div class="flex w-full items-start justify-between gap-10">
+			<aside class="hidden w-full max-w-3xs flex-col items-start gap-3 lg:sticky lg:top-30 lg:flex">
 				<h2 class="text-foreground/40 pl-2 text-xs font-semibold uppercase">Inicio</h2>
 				<ul class="flex flex-col items-start gap-1">
 					{#each components as post}
@@ -28,7 +28,7 @@
 					{/each}
 				</ul>
 			</aside>
-			<article class="mx-auto w-full max-w-3xl min-w-xl">
+			<article class="mx-auto w-full max-w-3xl lg:min-w-xl">
 				<header class="flex w-full flex-col items-start gap-2">
 					<h1 class="text-3xl font-bold">{components.find((post) => post.slug === page.params.slug)?.title}</h1>
 					<p class="mt-2 text-lg">
