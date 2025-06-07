@@ -1,1 +1,116 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where([color-scheme=dark], [color-scheme=dark] *));
+
+@theme {
+	--color-background: var(--color-white);
+	--color-foreground: var(--color-gray-950);
+	--color-border: var(--color-gray-200);
+
+	--container-8xl: 90rem;
+	--container-9xl: 120rem;
+	--container-10xl: 144rem;
+}
+
+::selection {
+	background-color: var(--color-foreground);
+	color: var(--color-background);
+}
+
+html {
+	line-height: 1.5;
+	-webkit-text-size-adjust: 100%;
+	font-family:
+		ui-sans-serif,
+		system-ui,
+		sans-serif,
+		Apple Color Emoji,
+		Segoe UI Emoji,
+		Segoe UI Symbol,
+		Noto Color Emoji;
+	font-feature-settings: normal;
+	font-variation-settings: normal;
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+	-webkit-tap-highlight-color: transparent;
+}
+
+[color-scheme="dark"] {
+	--color-background: hsl(230 9.41% 6.14%);
+	--color-foreground: var(--color-white);
+	--color-border: var(--color-gray-800);
+	--color-primary: var(--color-gray-100);
+	--color-primary-foreground: var(--color-gray-900);
+	--color-primary-hover: var(--color-white);
+}
+
+body {
+	background-color: var(--color-background);
+	color: var(--color-foreground);
+}
+
+code,
+kbd,
+pre,
+samp {
+	font-family: var(--font-mono);
+	font-feature-settings: normal;
+	font-variation-settings: normal;
+	font-size: var(--text-sm);
+}
+pre {
+	@apply !bg-foreground/3 rounded-lg py-6;
+	overflow: auto;
+	tab-size: 2;
+}
+pre {
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-gray-300) transparent;
+	scrollbar-gutter: stable;
+}
+pre code {
+	white-space: pre;
+	counter-reset: line;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+	border: 0;
+	min-width: 100%;
+	padding: 0;
+	display: grid;
+	gap: 0;
+}
+
+/* Line numbers */
+.line {
+	padding-top: calc(var(--spacing) * 0.5);
+	padding-bottom: calc(var(--spacing) * 0.5);
+	min-height: calc(var(--spacing) * 1);
+	width: 100%;
+	display: inline-block;
+}
+.line::before {
+	font-size: var(--text-sm);
+	counter-increment: line;
+	content: counter(line);
+	width: calc(var(--spacing) * 10);
+	padding-left: calc(var(--spacing) * 4);
+	padding-right: calc(var(--spacing) * 10);
+	text-align: right;
+	display: inline-block;
+}
+
+.token.keyword {
+	@apply text-blue-500;
+}
+
+/** Prose */
+.prose {
+	:is(h2, h3, h4, h5, h6):not(.demo :is(h2, h3, h4, h5, h6)) {
+		@apply font-semibold;
+	}
+
+	:is(h1, h2, h3, h4, h5, h6):not(.demo :is(h1, h2, h3, h4, h5, h6)) {
+		@apply mt-4;
+	}
+}

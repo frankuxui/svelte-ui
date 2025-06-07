@@ -1,7 +1,10 @@
 <script lang="ts">
-	import '../app.css';
-
+	import Header from "components/header.svelte";
+	import "../app.css";
+	export const prerender = true;
 	let { children } = $props();
 </script>
+
+<Header />
 
 {@render children()}

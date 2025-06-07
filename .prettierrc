@@ -18,5 +18,5 @@
 	"singleQuote": false,
 	"quoteProps": "as-needed",
 	"jsxSingleQuote": false,
-	"printWidth": 190
+	"printWidth": 120
 }

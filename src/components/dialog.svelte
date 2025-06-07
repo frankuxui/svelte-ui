@@ -1,151 +1,212 @@
 <script lang="ts">
-  import { fade, scale } from 'svelte/transition';
-  import { cubicOut } from 'svelte/easing';
-  import { tick } from 'svelte';
+	import { fade, scale } from "svelte/transition";
+	import { cubicOut } from "svelte/easing";
+	import { tick, onMount } from "svelte";
 
-  type Placement = "top-start" | "top" | "top-end" | "center" | "center-start" | "center-end" | "bottom-start" | "bottom" | "bottom-end";
-  type Size = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl" | "full" | "full-screen";
+	type Placement =
+		| "top-start"
+		| "top"
+		| "top-end"
+		| "center"
+		| "center-start"
+		| "center-end"
+		| "bottom-start"
+		| "bottom"
+		| "bottom-end";
+	type Size =
+		| "xs"
+		| "sm"
+		| "md"
+		| "lg"
+		| "xl"
+		| "2xl"
+		| "3xl"
+		| "4xl"
+		| "5xl"
+		| "6xl"
+		| "7xl"
+		| "8xl"
+		| "9xl"
+		| "full"
+		| "full-screen";
 
-  interface DialogProps {
-    open?: boolean;
-    placement?: Placement;
-    size?: Size;
-    staticBackdrop?: boolean;
-    onClose?: () => void;
-    children?: () => any; // Función para renderizar el contenido del diálogo
-  }
+	interface DialogProps {
+		open?: boolean;
+		placement?: Placement;
+		size?: Size;
+		staticBackdrop?: boolean;
+		setOpen?: () => void;
+		children?: () => any;
+		onDialogClose?: () => void; // Metodo para ejecutar otra accion al cerrar el dialogo
+	}
 
-  let {
-    open = false,
-    placement = "center",
-    size = "md",
-    staticBackdrop = false,
-    onClose = () => {},
-    children 
-  }: DialogProps = $props();
+	let {
+		open = false,
+		placement = "center",
+		size = "md",
+		staticBackdrop = false,
+		setOpen = () => {},
+		children,
+		onDialogClose
+	}: DialogProps = $props();
 
-  let shaking = $state(false);
+	let shaking = $state(false);
 
-  
+	// Escuchar tecla escape de forma global (solo una vez)
+	onMount(() => {
+		if (typeof window === "undefined") return;
 
-  // Este efecto escucha los cambios de open para añadir o quitar el listener
-  $effect(() => {
-    if (!open) return;
+		function handleEscapeKey(event: KeyboardEvent) {
+			if (event.key === "Escape" && open) {
+				if (staticBackdrop) {
+					shake();
+				} else {
+					close();
+				}
+			}
+		}
 
-    function handleEscapeKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        if (staticBackdrop) {
-          shaking = true;
-          setTimeout(() => shaking = false, 300);
-        } else {
-          handleClose();
-        }
-      }
-    }
+		window.addEventListener("keydown", handleEscapeKey);
+		return () => window.removeEventListener("keydown", handleEscapeKey);
+	});
 
-    window.addEventListener('keydown', handleEscapeKey);
-    return () => {
-      window.removeEventListener('keydown', handleEscapeKey);
-    };
-  });
+	function close() {
+		open = false;
+		setOpen?.();
+		tick().then(() => {
+			onDialogClose?.(); // Ejecutar otra acción al cerrar el diálogo
+		});
+	}
 
-  async function handleBackdropClick() {
-    if (staticBackdrop) {
-      shaking = true;
-      await tick();
-      setTimeout(() => shaking = false, 300);
-    } else {
-      handleClose();
-    }
-  }
+	async function handleBackdropClick() {
+		if (staticBackdrop) {
+			shake();
+		} else {
+			close();
+		}
+	}
 
-  function handleClose() {
-    open = false;   // Esto solo cierra visualmente
-    onClose?.();    // Notificamos al padre (opcional)
-  }
+	function shake() {
+		shaking = true;
+		setTimeout(() => (shaking = false), 300);
+	}
 
-  function cx(...classes: (string | boolean)[]) {
-    return classes.filter(Boolean).join(' ');
-  }
+	function cx(...classes: (string | boolean)[]) {
+		return classes.filter(Boolean).join(" ");
+	}
 </script>
 
-<style>
-  @keyframes shake-scale {
-    0% { transform: scale(1); }
-    20% { transform: scale(1.05); }
-    40% { transform: scale(0.95); }
-    60% { transform: scale(1.03); }
-    80% { transform: scale(0.97); }
-    100% { transform: scale(1); }
-  }
-
-  .shake {
-    animation: shake-scale 0.3s ease;
-  }
-</style>
-
 {#if open}
-  <div class={cx(
-    "fixed inset-0 z-50 flex",
-    placement === "top-start" && "justify-start items-start",
-    placement === "top" && "justify-center items-start",
-    placement === "top-end" && "justify-end items-start",
-    placement === "center" && "justify-center items-center",
-    placement === "center-start" && "justify-start items-center",
-    placement === "center-end" && "justify-end items-center",
-    placement === "bottom-start" && "justify-start items-end",
-    placement === "bottom" && "justify-center items-end",
-    placement === "bottom-end" && "justify-end items-end",
-    size === "full-screen" ? "p-0" : "p-10"
-  )}>
-    
-    <!-- Backdrop -->
-    <div 
-      role="button"
-      tabindex="0"
-      aria-label="Close dialog"
-      class="absolute inset-0 bg-black/30 z-10"
-      onclick={handleBackdropClick}
-      transition:fade={{ duration: 200 }}
-    ></div>
+	<div
+		class={cx(
+			"fixed inset-0 z-50 flex",
+			placement === "top-start" && "items-start justify-start",
+			placement === "top" && "items-start justify-center",
+			placement === "top-end" && "items-start justify-end",
+			placement === "center" && "items-center justify-center",
+			placement === "center-start" && "items-center justify-start",
+			placement === "center-end" && "items-center justify-end",
+			placement === "bottom-start" && "items-end justify-start",
+			placement === "bottom" && "items-end justify-center",
+			placement === "bottom-end" && "items-end justify-end",
+			size === "full-screen" ? "p-0" : "p-10"
+		)}
+		role="dialog"
+		aria-modal="true"
+	>
+		<!-- Backdrop -->
+		<div
+			role="button"
+			tabindex="0"
+			class="absolute inset-0 z-10 bg-black/30"
+			aria-label="Close dialog"
+			onclick={() => handleBackdropClick()}
+			onkeyup={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					handleBackdropClick();
+				}
+			}}
+			onkeydown={(e) => {
+				if (e.key === "Escape") {
+					e.preventDefault(); // Evitar el comportamiento por defecto del escape
+				}
+			}}
+			transition:fade={{ duration: 200 }}
+		></div>
 
-    <!-- Dialog -->
-    <div 
-      class={cx(
-        "relative z-20 w-full bg-white flex flex-col",
-        size === "xs" && "max-w-xs",
-        size === "sm" && "max-w-sm",
-        size === "md" && "max-w-md",
-        size === "lg" && "max-w-lg",
-        size === "xl" && "max-w-xl",
-        size === "2xl" && "max-w-2xl",
-        size === "3xl" && "max-w-3xl",
-        size === "4xl" && "max-w-4xl",
-        size === "5xl" && "max-w-5xl",
-        size === "6xl" && "max-w-6xl",
-        size === "7xl" && "max-w-7xl",
-        size === "8xl" && "max-w-8xl",
-        size === "9xl" && "max-w-9xl",
-        size === "full" && "w-full h-full",
-        size === "full-screen" ? "w-screen h-screen rounded-none" : "rounded-xl p-10",
-        shaking && "shake"
-      )}
-      transition:scale={{ duration: 300, start: 0.95, opacity: 0, easing: cubicOut }}
-    >
-      <div class="flex-1 overflow-y-auto">
-        {#if children}
-          {@render children()}
-        {/if}
-      </div>
+		<!-- Dialog -->
+		<div
+			class={cx(
+				"relative z-20 flex w-full flex-col bg-white",
+				size === "xs" && "max-w-xs",
+				size === "sm" && "max-w-sm",
+				size === "md" && "max-w-md",
+				size === "lg" && "max-w-lg",
+				size === "xl" && "max-w-xl",
+				size === "2xl" && "max-w-2xl",
+				size === "3xl" && "max-w-3xl",
+				size === "4xl" && "max-w-4xl",
+				size === "5xl" && "max-w-5xl",
+				size === "6xl" && "max-w-6xl",
+				size === "7xl" && "max-w-7xl",
+				size === "8xl" && "max-w-8xl",
+				size === "9xl" && "max-w-9xl",
+				size === "full" && "h-full w-full",
+				size === "full-screen" ? "h-screen w-screen rounded-none" : "rounded-xl p-10",
+				shaking && "shake"
+			)}
+			transition:scale={{ duration: 300, start: 0.95, opacity: 0, easing: cubicOut }}
+		>
+			{#if children}
+				{@render children()}
+			{/if}
 
-      <!-- Close button -->
-      <button
-        onclick={handleClose}
-        class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Close dialog"
-      >
-        ×
-      </button>
-    </div>
-  </div>
+			<header>
+				<button
+					type="button"
+					onclick={() => close()}
+					class="focus:ring-foreground hover:bg-foreground/4 absolute top-4 right-4 rounded-full p-2 transition-all duration-300 focus:ring-2 focus:outline-none"
+					aria-label="Close dialog"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+						><path
+							fill="none"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M18 6L6 18M6 6l12 12"
+						/></svg
+					>
+				</button>
+			</header>
+		</div>
+	</div>
 {/if}
+
+<style>
+	@keyframes shake-scale {
+		0% {
+			transform: scale(1);
+		}
+		20% {
+			transform: scale(1.05);
+		}
+		40% {
+			transform: scale(0.95);
+		}
+		60% {
+			transform: scale(1.03);
+		}
+		80% {
+			transform: scale(0.97);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	.shake {
+		animation: shake-scale 0.3s ease;
+	}
+</style>
