@@ -23,7 +23,7 @@
 				>
 					Componentes
 				</a>
-				<button onclick={() => (openDialog1 = true)} class="bg-black px-6 py-2 text-white"> Abrir Dialogo 1 </button>
+				<!-- <button onclick={() => (openDialog1 = true)} class="bg-black px-6 py-2 text-white"> Abrir Dialogo 1 </button>
 				<Dialog open={openDialog1} setOpen={() => (openDialog1 = false)} size="xs" placement="center">
 					<button onclick={() => (openDialog2 = true)} class="bg-blue-400 px-6 py-2 text-white">
 						Abrir Dialogo 2
@@ -33,7 +33,7 @@
 					<div class="flex h-full w-full items-center justify-center">
 						<h1 class="text-3xl font-bold">Hola, soy un dialogo</h1>
 					</div>
-				</Dialog>
+				</Dialog> -->
 			</section>
 			<section
 				class="bg-foreground/5 border-border h-[40rem] min-w-20 overflow-hidden border px-8 pt-8 lg:max-w-[62rem] lg:rounded-2xl"
