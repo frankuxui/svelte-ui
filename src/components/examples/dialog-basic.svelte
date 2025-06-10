@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Dialog from "components/dialog.svelte";
 	import Expo from "components/md/expo.svelte";
-	import { cx } from "lib/cx";
-
+	
 	let open = $state(false);
 
 	function setOpen(value: boolean) {
@@ -11,7 +10,7 @@
 </script>
 
 <Expo>
-	<Dialog {open} setOpen={() => setOpen(false)}>
+	<Dialog bind:open={open} setOpen={() => setOpen(false)}>
 		<div>
 			<h2>Esto es el header</h2>
 		</div>

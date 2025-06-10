@@ -42,7 +42,7 @@
 	}
 
 	let {
-		open = false,
+		open = $bindable(false),
 		placement = "center",
 		size = "md",
 		staticBackdrop = false,

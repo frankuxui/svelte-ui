@@ -30,7 +30,7 @@
 			</aside>
 			<article class="mx-auto w-full max-w-3xl lg:min-w-xl">
 				<header class="flex w-full flex-col items-start gap-2">
-					<h1 class="text-3xl font-bold">{components.find((post) => post.slug === page.params.slug)?.title}</h1>
+					<h1 class="text-4xl font-bold">{components.find((post) => post.slug === page.params.slug)?.title}</h1>
 					<p class="mt-2 text-lg">
 						{components.find((post) => post.slug === page.params.slug)?.description}
 					</p>
